@@ -29,6 +29,7 @@
         // Отправляем выбор в бота
         function play(choice) {
             const data = JSON.stringify({ choice: choice }); // Создаем JSON объект
+            console.log("Отправляем данные:", data); // Логируем отправку данных
             Telegram.WebApp.sendData(choice); // Отправляем в бота
             document.getElementById('result').textContent = "Ожидаем результат...";
         }

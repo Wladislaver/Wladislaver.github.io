@@ -2,7 +2,18 @@
 <html>
 <head>
     <title>SIFA Game</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          if (typeof Telegram !== "undefined" && Telegram.WebApp) {
+            console.log("Telegram Web App SDK загружен успешно", Telegram.WebApp);
+            Telegram.WebApp.ready();
+            Telegram.WebApp.expand();
+          } else {
+            console.error("Ошибка: Telegram Web App SDK НЕ загружен!");
+          }
+        });
+      </script>
+      
     <style>
         body { text-align: center; padding: 20px; }
         .choice-btn { 

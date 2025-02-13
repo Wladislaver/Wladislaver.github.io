@@ -38,17 +38,47 @@
     <p>Баланс: <span id="balance">1000</span> SIFA</p>
 
     <script>
-        // Отправляем выбор в бота
-        function play(choice) {
-            // const data = JSON.stringify({ choice: choice }); // Создаем JSON объект
-            console.log("Отправляем данные:", data); // Логируем отправку данных
-            Telegram.WebApp.sendData(choice); // Отправляем в бота
-            document.getElementById('result').textContent = "Ожидаем результат...";
-        }
-
-        // Обновляем интерфейс при открытии Web App
-        Telegram.WebApp.ready();
-        Telegram.WebApp.expand();
-    </script>
-</body>
-</html>
+      async function play(choice) {
+          console.log("Выбран жест:", choice);
+  
+          // Получаем данные о пользователе из Telegram WebApp API
+          const user = Telegram.WebApp.initDataUnsafe.user;
+  
+          if (!user) {
+              console.error("Ошибка: пользователь не определён!");
+              return;
+          }
+  
+          const user_id = user.id;
+  
+          // Данные для отправки на сервер
+          const data = {
+              user_id: user_id,
+              choice: choice
+          };
+  
+          console.log("Отправляем данные на сервер:", data);
+  
+          try {
+              const response = await fetch("http://127.0.0.1:8000/game", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(data)
+              });
+  
+              console.log("Ответ получен:", response);
+  
+              if (!response.ok) {
+                  throw new Error(`Ошибка HTTP: ${response.status}`);
+              }
+  
+              const result = await response.json();
+              console.log("Ответ сервера:", result);
+  
+              document.getElementById('result').textContent = `Результат: ${result.message}`;
+          } catch (error) {
+              console.error("Ошибка отправки данных:", error);
+          }
+      }
+  </script>
+  
